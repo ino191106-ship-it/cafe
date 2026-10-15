@@ -1,0 +1,171 @@
+const COMPANY={
+  name:"Công ty TNHH Cà phê Hương Rừng",founded:2016,
+  address:"Số 25 đường Lê Lợi, phường Hà Huy Tập, TP. Vinh, Nghệ An",
+  phone:"0987 654 321",hotline2:"0238 3 888 123",email:"lienhe@huongrung.vn",support:"hotro@huongrung.vn",
+  hours:"Thứ 2 - Thứ 7, 8:00 - 18:00",
+  about:"Hương Rừng được thành lập năm 2016 bởi những người con của vùng đất Tây Nguyên và Tây Bắc. Chúng tôi làm việc trực tiếp với nông hộ tại Buôn Ma Thuột, Cầu Đất và Hà Giang để chọn hạt, lá trà đạt chuẩn, rồi rang xay và đóng gói tại xưởng ở Nghệ An. Mỗi bao đều ghi rõ ngày rang và vùng trồng để bạn biết mình đang uống gì.",
+  stats:[["8 năm","hoạt động"],["25+","nông hộ đối tác"],["12.000+","khách hàng"]],
+  team:[["Nguyễn Văn Minh","Giám đốc, người sáng lập"],["Trần Thị Lan","Quản lý bán hàng"],["Lê Hoàng Nam","Trưởng xưởng rang"]]
+};
+/* Tài khoản nhận tiền (mẫu) - đổi thành thông tin thật. bank = mã ngân hàng theo VietQR (MB, VCB, TCB, ACB...) */
+const BANK={bank:"MB",acc:"0123456789",owner:"CONG TY TNHH CA PHE HUONG RUNG"};
+/* Ảnh: đặt file vào thư mục images/ cùng cấp với index.html (hoặc thay bằng URL https).
+   Ảnh thiếu/lỗi sẽ tự quay về hình minh họa. */
+const IMAGES={hero:"images/hero.jpg",about:"images/about.jpg",1:"images/robusta.jpg",2:"images/arabica.jpg",3:"images/culi.jpg",4:"images/tra-shan-tuyet.jpg",5:"images/tra-sen.jpg",6:"images/tra-o-long.jpg",7:"images/phin.jpg",8:"images/cold-brew.jpg",team:["images/team1.jpg","images/team2.jpg","images/team3.jpg"]};
+
+const PRODUCTS=[
+ {id:1,name:"Robusta Buôn Ma Thuột",cat:"Cà phê",w:"500g",price:145000,t:"bag",d:"#6B3F26",c:"#EADFD2",tag:"ROBUSTA",badge:"Bán chạy"},
+ {id:2,name:"Arabica Cầu Đất",cat:"Cà phê",w:"500g",price:210000,t:"bag",d:"#8A5A2B",c:"#E3E9DB",tag:"ARABICA"},
+ {id:3,name:"Cà phê Culi rang mộc",cat:"Cà phê",w:"500g",price:175000,t:"bag",d:"#3E2A1E",c:"#E8DFC9",tag:"CULI"},
+ {id:4,name:"Trà shan tuyết Hà Giang",cat:"Trà",w:"200g",price:260000,t:"tin",d:"#2F6B4F",c:"#D5E6DA",tag:"SHAN TUYẾT",badge:"Mới"},
+ {id:5,name:"Trà sen Tây Hồ",cat:"Trà",w:"100g",price:320000,t:"tin",d:"#A5476B",c:"#F3DFE6",tag:"TRÀ SEN"},
+ {id:6,name:"Trà ô long Lâm Đồng",cat:"Trà",w:"250g",price:190000,t:"tin",d:"#5B7A2E",c:"#E2EACB",tag:"Ô LONG"},
+ {id:7,name:"Phin nhôm size 8",cat:"Dụng cụ",w:"1 cái",price:55000,t:"phin",d:"#7A8A94",c:"#DCE4EA",tag:""},
+ {id:8,name:"Bình cold brew 1L",cat:"Dụng cụ",w:"1 cái",price:240000,t:"bottle",d:"#6B3F26",c:"#D5E5EA",tag:""}
+];
+const FREE_SHIP=300000,SHIP=30000,COUPONS={GIAM10:.10};
+let cart={},cat='Tất cả',coupon=null;
+try{cart=JSON.parse(localStorage.getItem('cart')||'{}')}catch(e){}
+const $=id=>document.getElementById(id);
+const vnd=n=>n.toLocaleString('vi-VN')+'đ';
+const save=()=>{try{localStorage.setItem('cart',JSON.stringify(cart))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function art(p){
+  const d=p.d,lab=`<rect x="72" y="70" width="56" height="46" rx="4" fill="#fff" opacity=".93"/><text x="100" y="88" text-anchor="middle" font-size="8" font-weight="800" fill="${d}" font-family="sans-serif">HƯƠNG RỪNG</text><text x="100" y="104" text-anchor="middle" font-size="7.5" font-weight="700" fill="#555" font-family="sans-serif">${p.tag}</text>`;
+  const sh=`<ellipse cx="100" cy="146" rx="52" ry="6" fill="#000" opacity=".12"/>`;
+  let s='';
+  if(p.t==='bag')s=`${sh}<rect x="62" y="24" width="76" height="118" rx="8" fill="${d}"/><path d="M62 24h76l-4 12H66z" fill="#000" opacity=".2"/>${lab}`;
+  if(p.t==='tin')s=`${sh}<rect x="66" y="44" width="68" height="98" rx="6" fill="${d}"/><rect x="62" y="32" width="76" height="16" rx="5" fill="#E8A33D"/>${lab.replace('y="70"','y="72"')}`;
+  if(p.t==='phin')s=`${sh}<rect x="66" y="100" width="68" height="44" rx="6" fill="#fff" opacity=".85"/><rect x="66" y="128" width="68" height="16" rx="4" fill="#6B3F26"/><rect x="58" y="88" width="84" height="12" rx="3" fill="${d}"/><rect x="70" y="62" width="60" height="26" rx="3" fill="#A8B5BD"/><circle cx="100" cy="54" r="6" fill="${d}"/>`;
+  if(p.t==='bottle')s=`${sh}<rect x="76" y="28" width="48" height="116" rx="12" fill="#fff" opacity=".8" stroke="#9FB8C0" stroke-width="2"/><rect x="80" y="70" width="40" height="70" rx="8" fill="${d}"/><rect x="82" y="14" width="36" height="18" rx="4" fill="#17402F"/>`;
+  return `<svg viewBox="0 0 200 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="200" height="160" fill="${p.c}"/>${s}</svg>`;
+}
+const photo=(src,alt)=>src?`<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.remove()">`:'';
+const vis=p=>art(p)+photo(IMAGES[p.id],p.name);
+
+function renderShop(){
+  const cats=['Tất cả',...new Set(PRODUCTS.map(p=>p.cat))];
+  $('tabs').innerHTML=cats.map(c=>`<button class="tab" aria-pressed="${c===cat}" onclick="cat='${c}';renderShop()">${c}</button>`).join('');
+  $('grid').innerHTML=PRODUCTS.filter(p=>cat==='Tất cả'||p.cat===cat).map(p=>`
+    <article class="p"><div class="img">${p.badge?`<span class="badge">${p.badge}</span>`:''}${vis(p)}</div>
+    <div class="b"><h3>${p.name}</h3><small>${p.cat} · ${p.w}</small>
+    <div class="row"><span class="price">${vnd(p.price)}</span><button class="btn" onclick="add(${p.id})">Thêm vào giỏ</button></div></div></article>`).join('');
+}
+function renderInfo(){
+  $('tbPhone').textContent='Hotline: '+COMPANY.phone;$('tbMail').textContent='Email: '+COMPANY.email;
+  $('aboutText').textContent=COMPANY.about;
+  $('stats').innerHTML=COMPANY.stats.map(s=>`<div><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
+  $('team').innerHTML=COMPANY.team.map((m,i)=>`<div class="member"><div class="av">${m[0].split(' ').pop()[0]}${photo(IMAGES.team[i],m[0])}</div><div><b>${m[0]}</b><small>${m[1]}</small></div></div>`).join('');
+  $('contactBox').innerHTML=[['Địa chỉ',COMPANY.address],['Điện thoại',COMPANY.phone+' · '+COMPANY.hotline2],['Email',COMPANY.email+' · '+COMPANY.support],['Giờ làm việc',COMPANY.hours]].map(c=>`<div><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+  $('ftName').textContent='© '+new Date().getFullYear()+' '+COMPANY.name+'. Website demo cho đồ án.';
+  $('ftAddr').textContent=COMPANY.address;
+  $('heroArt').insertAdjacentHTML('beforeend',photo(IMAGES.hero,'Hương Rừng'));
+  $('aboutPic').insertAdjacentHTML('beforeend',photo(IMAGES.about,'Vườn cà phê'));
+}
+function lines(){return Object.entries(cart).map(([id,q])=>({p:PRODUCTS.find(x=>x.id==id),q})).filter(l=>l.p)}
+function totals(){
+  const sub=lines().reduce((s,l)=>s+l.p.price*l.q,0);
+  const disc=Math.round(sub*(coupon?COUPONS[coupon]:0));
+  const ship=sub===0||sub-disc>=FREE_SHIP?0:SHIP;
+  return{sub,disc,ship,total:sub-disc+ship};
+}
+function sumHTML(){
+  const t=totals();
+  return `<div><span>Tạm tính</span><span>${vnd(t.sub)}</span></div>`+(t.disc?`<div><span>Giảm giá (${coupon})</span><span>-${vnd(t.disc)}</span></div>`:'')+
+   `<div><span>Phí giao hàng</span><span>${t.ship?vnd(t.ship):'Miễn phí'}</span></div><div class="tot"><span>Tổng cộng</span><span>${vnd(t.total)}</span></div>`;
+}
+function add(id){cart[id]=(cart[id]||0)+1;save();render();openCart()}
+function chg(id,d){cart[id]=(cart[id]||0)+d;if(cart[id]<=0)delete cart[id];save();render()}
+function rm(id){delete cart[id];save();render()}
+function render(){
+  const L=lines();
+  $('cnt').textContent=L.reduce((s,l)=>s+l.q,0);
+  $('cartItems').innerHTML=L.length?L.map(({p,q})=>`
+    <div class="it"><div class="thumb">${vis(p)}</div>
+    <div><b>${p.name}</b><div class="price">${vnd(p.price)}</div>
+    <div class="qty"><button aria-label="Giảm" onclick="chg(${p.id},-1)">−</button><span>${q}</span><button aria-label="Tăng" onclick="chg(${p.id},1)">+</button></div></div>
+    <button class="x" onclick="rm(${p.id})">Xóa</button></div>`).join(''):'<p class="empty">Giỏ hàng đang trống. Chọn sản phẩm để bắt đầu.</p>';
+  $('cartSum').innerHTML=L.length?sumHTML():'';
+  $('toCo').disabled=!L.length;
+  $('coItems').innerHTML=L.map(({p,q})=>`<div class="it"><div class="thumb">${vis(p)}</div><div>${p.name}<br><small style="color:var(--mute)">SL: ${q}</small></div><b>${vnd(p.price*q)}</b></div>`).join('')||'<p class="empty">Chưa có sản phẩm.</p>';
+  $('coSum').innerHTML=sumHTML();
+  updateQR();
+}
+function openCart(){$('ov').classList.add('on');$('drawer').classList.add('on')}
+function closeCart(){$('ov').classList.remove('on');$('drawer').classList.remove('on')}
+function go(v){
+  if(v==='checkout'&&!lines().length)return;
+  closeCart();
+  ['shop','checkout','done'].forEach(x=>$(x).classList.toggle('hidden',x!==v));
+  if(v==='checkout')updateQR();
+  scrollTo(0,0);
+}
+function jump(id){if($('shop').classList.contains('hidden'))go('shop');setTimeout(()=>$(id).scrollIntoView({behavior:'smooth'}),30)}
+function applyCoupon(){
+  const c=$('cpn').value.trim().toUpperCase();
+  if(COUPONS[c]){coupon=c;$('msg').textContent='Đã áp dụng mã '+c+'.';$('msg').style.color='var(--green2)'}
+  else{coupon=null;$('msg').textContent='Mã không hợp lệ. Thử mã GIAM10.';$('msg').style.color='var(--err)'}
+  render();
+}
+/* ===== QR chuyển khoản (VietQR) ===== */
+function transferNote(){return 'HUONGRUNG '+($('phone').value.replace(/\D/g,'')||'')}
+function qrURL(){
+  const t=totals().total;
+  return `https://img.vietqr.io/image/${BANK.bank}-${BANK.acc}-compact2.png?amount=${t}&addInfo=${encodeURIComponent(transferNote().trim())}&accountName=${encodeURIComponent(BANK.owner)}`;
+}
+function updateQR(){
+  const img=$('qrImg');
+  if(!img)return;
+  img.src=qrURL();
+  $('qrAmt').textContent=vnd(totals().total);
+  $('qrNote').textContent=transferNote().trim();
+}
+const PAY={
+ cod:()=>'Bạn trả tiền mặt cho nhân viên giao hàng khi nhận hàng.',
+ bank:()=>`<div class="qr"><div class="qrbox"><img id="qrImg" alt="Mã QR chuyển khoản" onerror="this.replaceWith(document.createTextNode('Không tải được mã QR. Vui lòng chuyển khoản thủ công.'))"></div>
+  <div>Quét mã bằng app ngân hàng để chuyển khoản.<br><br>
+  Ngân hàng: <b>${BANK.bank}</b><br>Số tài khoản: <b>${BANK.acc}</b><br>Chủ tài khoản: <b>${BANK.owner}</b><br>
+  Số tiền: <b id="qrAmt"></b><br>Nội dung: <b id="qrNote"></b></div></div>`,
+ card:()=>`<div class="f"><label for="cn">Số thẻ</label><input id="cn" inputmode="numeric" placeholder="1234 5678 9012 3456" maxlength="19"><span class="m">Nhập số thẻ 16 chữ số.</span></div>
+  <div class="two"><div class="f"><label for="ce">Hết hạn (MM/YY)</label><input id="ce" inputmode="numeric" placeholder="08/28" maxlength="5"><span class="m">Nhập theo dạng MM/YY.</span></div>
+  <div class="f"><label for="cv">CVV</label><input id="cv" inputmode="numeric" maxlength="3"><span class="m">Nhập 3 chữ số.</span></div></div>
+  <small>Đây là bản demo, không nhập thẻ thật.</small>`
+};
+function payMethod(){return document.querySelector('[name=pay]:checked').value}
+function showPay(){
+  $('pinfo').innerHTML=PAY[payMethod()]();
+  if(payMethod()==='bank')updateQR();
+  if(payMethod()==='card'){
+    $('cn').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,16).replace(/(\d{4})(?=\d)/g,'$1 ')};
+    $('ce').oninput=e=>{let v=e.target.value.replace(/\D/g,'').slice(0,4);e.target.value=v.length>2?v.slice(0,2)+'/'+v.slice(2):v};
+    $('cv').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,3)};
+  }
+}
+document.querySelectorAll('[name=pay]').forEach(r=>r.onchange=showPay);
+
+/* Ô số điện thoại: chỉ nhận chữ số (kể cả khi dán) */
+$('phone').addEventListener('keypress',e=>{if(e.key.length===1&&!/\d/.test(e.key))e.preventDefault()});
+$('phone').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,10);clearTimeout(window._qt);window._qt=setTimeout(updateQR,400)});
+
+function check(id,ok){$(id).closest('.f').classList.toggle('bad',!ok);return ok}
+$('form').addEventListener('submit',e=>{
+  e.preventDefault();
+  let ok=true;
+  ok=check('name',$('name').value.trim().length>1)&ok;
+  ok=check('phone',/^0\d{9}$/.test($('phone').value))&ok;
+  ok=check('email',/^\S+@\S+\.\S+$/.test($('email').value.trim()))&ok;
+  ok=check('addr',$('addr').value.trim().length>4)&ok;
+  ok=check('city',!!$('city').value)&ok;
+  if(payMethod()==='card'){
+    ok=check('cn',/^\d{16}$/.test($('cn').value.replace(/\s/g,'')))&ok;
+    ok=check('ce',/^(0[1-9]|1[0-2])\/\d{2}$/.test($('ce').value))&ok;
+    ok=check('cv',/^\d{3}$/.test($('cv').value))&ok;
+  }
+  if(!ok){document.querySelector('.bad input,.bad select')?.focus();return}
+  const id='HR'+Date.now().toString().slice(-7),t=totals();
+  $('oid').textContent=id;
+  $('odesc').textContent=`Cảm ơn ${$('name').value.trim()}. Đơn hàng ${vnd(t.total)} sẽ được giao đến ${$('addr').value.trim()}, ${$('city').value}. Chúng tôi gửi xác nhận qua ${$('email').value.trim()}.`;
+  cart={};coupon=null;save();render();$('form').reset();showPay();go('done');
+});
+renderInfo();renderShop();render();showPay();

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Hương Rừng - cà phê và trà Tây Nguyên rang tươi, giao hàng toàn quốc.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2716%27 fill=%27%23E8A33D%27/%3E%3Cpath d=%27M9 22c0-8 6-13 14-13 0 8-5 14-13 14z%27 fill=%27%2317402F%27/%3E%3C/svg%3E">
+<title>Hương Rừng - Cà phê & trà Tây Nguyên</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span id="tbPhone"></span><span id="tbMail"></span></div></div>
+<header><div class="wrap">
+  <button class="logo" onclick="go('shop')" aria-label="Hương Rừng - trang chủ">
+    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#E8A33D"/><path d="M9 22c0-8 6-13 14-13 0 8-5 14-13 14z" fill="#17402F"/><path d="M10 22l9-9" stroke="#E8A33D" stroke-width="1.6"/></svg>Hương Rừng
+  </button>
+  <nav><button onclick="jump('products')">Sản phẩm</button><button onclick="jump('about')">Giới thiệu</button><button onclick="jump('contact')">Liên hệ</button></nav>
+  <button class="cart-btn" onclick="openCart()">Giỏ hàng (<span id="cnt">0</span>)</button>
+</div></header>
+
+<main id="shop">
+  <section class="hero"><div class="wrap">
+    <div>
+      <span class="eyebrow">Rang tươi mỗi tuần</span>
+      <h1>Cà phê và trà <em>vùng cao</em>, thơm từ hạt đến tách</h1>
+      <p>Chúng tôi chọn hạt từ Buôn Ma Thuột, Cầu Đất, Hà Giang và giao tận nhà trên toàn quốc. Miễn phí giao hàng cho đơn từ 300.000đ.</p>
+      <div class="cta"><button class="btn amber" onclick="jump('products')">Mua sắm ngay</button><button class="btn ghost light" onclick="jump('about')">Về Hương Rừng</button></div>
+    </div>
+    <div class="art" id="heroArt">
+      <svg viewBox="0 0 480 360" role="img" aria-label="Đồi cà phê và tách cà phê nóng">
+        <rect width="480" height="360" fill="#1F5A43"/><circle cx="370" cy="90" r="46" fill="#E8A33D"/>
+        <path d="M0 230C80 170 150 190 230 215s170-50 250-20v165H0z" fill="#2F7A5A"/>
+        <path d="M0 270c90-50 170-30 260-5s150 0 220-25v120H0z" fill="#245C45"/>
+        <path d="M0 310c100-30 190-10 280 5s130-5 200-15v60H0z" fill="#17402F"/>
+        <g transform="translate(150 190)"><path d="M20 30h120v50c0 38-27 62-60 62s-60-24-60-62z" fill="#fff"/><path d="M140 44h20c18 0 18 36 0 36h-20" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><ellipse cx="80" cy="30" rx="60" ry="10" fill="#6B3F26"/><ellipse cx="80" cy="152" rx="80" ry="10" fill="#E8EFEA"/><path d="M55 8c-14-14 14-22 0-40M85 8c-14-14 14-22 0-40M115 8c-14-14 14-22 0-40" fill="none" stroke="#CFE2D8" stroke-width="4" stroke-linecap="round" opacity=".7"/></g>
+      </svg>
+    </div>
+  </div></section>
+
+  <div class="perks"><div class="wrap">
+    <div><b>Giao hàng toàn quốc</b><span>Nhận hàng sau 1-3 ngày</span></div>
+    <div><b>Rang tươi mỗi tuần</b><span>Ghi ngày rang trên bao bì</span></div>
+    <div><b>Đổi trả trong 7 ngày</b><span>Nếu sản phẩm lỗi do nhà sản xuất</span></div>
+    <div><b>Thanh toán linh hoạt</b><span>COD, chuyển khoản hoặc thẻ</span></div>
+  </div></div>
+
+  <div class="wrap">
+    <section id="products">
+      <h2 class="t">Sản phẩm</h2>
+      <p class="sub">Chọn hạt cà phê, trà và dụng cụ pha chế do Hương Rừng tuyển chọn.</p>
+      <div class="tabs" id="tabs"></div><div class="grid" id="grid"></div>
+    </section>
+    <section id="about">
+      <h2 class="t">Giới thiệu công ty</h2>
+      <div class="about">
+        <div class="pic" id="aboutPic">
+          <svg viewBox="0 0 480 360" role="img" aria-label="Vườn cà phê trên đồi"><rect width="480" height="360" fill="#D7E8DE"/><path d="M0 150C90 100 170 130 260 120s150-40 220 0v240H0z" fill="#8DBBA2"/><path d="M0 210C100 170 180 200 270 190s140-30 210 0v170H0z" fill="#4E8F70"/><g fill="#17402F"><circle cx="70" cy="260" r="26"/><circle cx="170" cy="285" r="30"/><circle cx="290" cy="262" r="28"/><circle cx="390" cy="290" r="32"/></g><g fill="#C0392B"><circle cx="62" cy="254" r="4"/><circle cx="78" cy="266" r="4"/><circle cx="165" cy="280" r="4"/><circle cx="180" cy="291" r="4"/><circle cx="286" cy="256" r="4"/><circle cx="300" cy="268" r="4"/><circle cx="384" cy="285" r="4"/><circle cx="398" cy="296" r="4"/></g><circle cx="400" cy="70" r="30" fill="#E8A33D"/></svg>
+        </div>
+        <div><p id="aboutText"></p><div class="stats" id="stats"></div></div>
+      </div>
+      <h2 class="t" style="font-size:22px;margin-top:36px">Đội ngũ</h2>
+      <div class="team" id="team"></div>
+    </section>
+    <section id="contact">
+      <h2 class="t">Liên hệ</h2>
+      <p class="sub">Cần tư vấn chọn hạt hoặc hỗ trợ đơn hàng? Liên hệ với chúng tôi qua các kênh dưới đây.</p>
+      <div class="contact" id="contactBox"></div>
+    </section>
+  </div>
+</main>
+
+<main id="checkout" class="hidden"><div class="wrap">
+  <form class="co" id="form" novalidate>
+    <div>
+      <div class="box" style="margin-bottom:20px">
+        <h2>Thông tin giao hàng</h2>
+        <div class="two">
+          <div class="f"><label for="name">Họ và tên</label><input id="name" autocomplete="name"><span class="m">Nhập họ và tên.</span></div>
+          <div class="f"><label for="phone">Số điện thoại</label><input id="phone" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" placeholder="0987654321"><span class="m">Nhập số điện thoại 10 chữ số, bắt đầu bằng 0.</span></div>
+        </div>
+        <div class="f"><label for="email">Email</label><input id="email" type="email" autocomplete="email"><span class="m">Nhập email hợp lệ.</span></div>
+        <div class="f"><label for="addr">Địa chỉ</label><input id="addr" autocomplete="street-address"><span class="m">Nhập địa chỉ nhận hàng.</span></div>
+        <div class="two">
+          <div class="f"><label for="city">Tỉnh / thành phố</label>
+            <select id="city"><option value="">Chọn tỉnh / thành phố</option><option>Hà Nội</option><option>TP. Hồ Chí Minh</option><option>Đà Nẵng</option><option>Nghệ An</option><option>Cần Thơ</option><option>Khác</option></select><span class="m">Chọn tỉnh / thành phố.</span></div>
+          <div class="f"><label for="note">Ghi chú (không bắt buộc)</label><input id="note"></div>
+        </div>
+      </div>
+      <div class="box">
+        <h2>Phương thức thanh toán</h2>
+        <div class="pay">
+          <label><input type="radio" name="pay" value="cod" checked> Thanh toán khi nhận hàng (COD)</label>
+          <label><input type="radio" name="pay" value="bank"> Chuyển khoản ngân hàng (quét mã QR)</label>
+          <label><input type="radio" name="pay" value="card"> Thẻ ATM / Visa / Mastercard</label>
+        </div>
+        <div class="pinfo" id="pinfo"></div>
+      </div>
+    </div>
+    <aside><div class="box">
+      <h2>Đơn hàng của bạn</h2><div id="coItems"></div>
+      <div class="cpn"><input id="cpn" placeholder="Mã giảm giá" aria-label="Mã giảm giá"><button type="button" class="btn ghost" onclick="applyCoupon()">Áp dụng</button></div>
+      <div id="msg" role="status"></div><div class="sum" id="coSum"></div>
+      <button class="btn full" style="margin-top:14px">Đặt hàng</button>
+      <button type="button" class="btn ghost full" style="margin-top:8px" onclick="go('shop')">Tiếp tục mua sắm</button>
+    </div></aside>
+  </form>
+</div></main>
+
+<main id="done" class="hidden"><div class="wrap ok">
+  <div class="tick">✓</div><h1>Đặt hàng thành công</h1>
+  <p style="margin:8px 0">Mã đơn hàng: <b id="oid"></b></p>
+  <p id="odesc" style="color:var(--mute);max-width:480px;margin:0 auto 20px"></p>
+  <button class="btn" onclick="go('shop')">Về trang chủ</button>
+</div></main>
+
+<footer><div class="wrap"><div id="ftName"></div><div id="ftAddr"></div></div></footer>
+<div class="ov" id="ov" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer" aria-label="Giỏ hàng">
+  <h2>Giỏ hàng <button class="x" onclick="closeCart()">Đóng</button></h2>
+  <div class="items" id="cartItems"></div><div class="sum" id="cartSum"></div>
+  <button class="btn full" id="toCo" style="margin-top:12px" onclick="go('checkout')">Thanh toán</button>
+</aside>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>
